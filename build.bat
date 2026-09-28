@@ -35,10 +35,27 @@ pyinstaller --onefile --windowed ^
     normalize_gui_modern.py
 
 echo.
+echo Building CLI executable...
+pyinstaller --onefile --console ^
+    --name "LUFSNormalizer_v3.1.3_CLI" ^
+    --icon "icons\app_icon.ico" ^
+    --add-data "config.default.json;." ^
+    --add-data "lufs_normalizer;lufs_normalizer" ^
+    --hidden-import=soundfile ^
+    --hidden-import=pyloudnorm ^
+    --hidden-import=soxr ^
+    --hidden-import=numpy ^
+    --hidden-import=watchdog ^
+    --exclude-module=customtkinter ^
+    --exclude-module=tkinter ^
+    cli_entry.py
+
+echo.
 echo Creating distribution package...
 if not exist "dist\LUFSNormalizer_v3.1.3" mkdir "dist\LUFSNormalizer_v3.1.3"
 
 move "dist\LUFSNormalizer_v3.1.3.exe" "dist\LUFSNormalizer_v3.1.3\"
+move "dist\LUFSNormalizer_v3.1.3_CLI.exe" "dist\LUFSNormalizer_v3.1.3\"
 copy "config.default.json" "dist\LUFSNormalizer_v3.1.3\config.json"
 copy "scripts\verify_audio.py" "dist\LUFSNormalizer_v3.1.3\"
 if exist "icons\app_icon.ico" copy "icons\app_icon.ico" "dist\LUFSNormalizer_v3.1.3\"

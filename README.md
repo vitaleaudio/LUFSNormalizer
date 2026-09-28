@@ -6,7 +6,7 @@ Professional batch audio normalization for broadcast, game audio and streaming. 
 
 ## Download
 
-Get the latest Windows build from the [releases page](https://github.com/vitaleaudio/LUFSNormalizer/releases/latest). The exe is unsigned, so Windows SmartScreen will warn on first launch.
+Get the latest Windows build from the [releases page](https://github.com/vitaleaudio/LUFSNormalizer/releases/latest). The download contains two executables: `LUFSNormalizer_v3.1.3.exe` (GUI) and `LUFSNormalizer_v3.1.3_CLI.exe` (command line). Both exes are unsigned, so Windows SmartScreen will warn on first launch.
 
 ## Features
 
@@ -180,7 +180,10 @@ Compatible with Wwise, FMOD and broadcast QC tools.
 
 ## CLI Usage
 
+The CLI ships as a separate executable, `LUFSNormalizer_v3.1.3_CLI.exe`, in the same download as the GUI exe. Run the CLI commands in this README against that file, not the GUI exe. `LUFSNormalizer_v3.1.3.exe` always opens the GUI and ignores command-line arguments. When using the downloaded exe, replace `python -m lufs_normalizer` in the examples below with `LUFSNormalizer_v3.1.3_CLI.exe`.
+
 ```
+LUFSNormalizer_v3.1.3_CLI.exe input_dir output_dir [options]
 python -m lufs_normalizer input_dir output_dir [options]
 ```
 
