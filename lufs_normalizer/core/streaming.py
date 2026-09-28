@@ -22,6 +22,12 @@ _HOP_SECONDS = 0.1                          # 100 ms hop → 75 % overlap
 _ABSOLUTE_GATE_POWER = 10.0 ** ((-70.0 + 0.691) / 10.0)
 
 
+class NonFiniteSamplesError(ValueError):
+    def __init__(self, count):
+        super().__init__(f"{count} non-finite samples (NaN/inf)")
+        self.count = count
+
+
 # ---------------------------------------------------------------------------
 # Public helpers
 # ---------------------------------------------------------------------------
@@ -76,10 +82,16 @@ def measure_streaming(audio_path, chunk_frames: int = _CHUNK_FRAMES):
     block_powers = []
     pending = np.empty((0, num_channels), dtype=np.float64)
     true_peak_linear = 0.0
+    non_finite = 0
 
     with sf.SoundFile(str(audio_path)) as f:
         for raw in f.blocks(blocksize=chunk_frames, dtype='float64'):
             chunk = raw.reshape(-1, 1) if raw.ndim == 1 else raw
+
+            chunk_non_finite = int(np.count_nonzero(~np.isfinite(chunk)))
+            if chunk_non_finite:
+                non_finite += chunk_non_finite
+                continue
 
             # True Peak from unfiltered chunk
             # (inter-sample peaks at chunk boundaries are negligible for typical
@@ -104,6 +116,9 @@ def measure_streaming(audio_path, chunk_frames: int = _CHUNK_FRAMES):
                 # BS.1770-4: sum of per-channel mean-squares (not average)
                 block_powers.append(float(np.sum(np.mean(block ** 2, axis=0))))
                 pending = pending[hop_frames:]
+
+    if non_finite:
+        raise NonFiniteSamplesError(non_finite)
 
     lufs = _apply_bs1770_gate(block_powers)
     true_peak_db = 20.0 * np.log10(true_peak_linear) if true_peak_linear > 0 else -100.0

@@ -107,8 +107,15 @@ class LUFSNormalizer:
             logger.addHandler(file_handler)
         return log_file
 
-    def _process_result(self, result, idx, total_files):
-        """Handle a single file result from process_single_file()."""
+    def _process_result(self, result, idx, total_files, report_name=None):
+        """Handle a single file result from process_single_file().
+
+        report_name, if given, replaces the filename in CSV-bound records.
+        """
+        record_key = {'success': 'result', 'needs_limiting': 'skipped'}.get(result['type'])
+        if report_name is not None and record_key:
+            result[record_key]['filename'] = report_name
+
         # Replay log messages
         for level, msg in result.get('log_messages', []):
             prefixed = f"[{idx}/{total_files}] {msg}"
@@ -297,8 +304,10 @@ class LUFSNormalizer:
             if recursive:
                 rel_parent = audio_path.relative_to(input_path).parent
                 file_normalized_path = normalized_path / rel_parent
+                file_needs_limiting_path = needs_limiting_path / rel_parent
             else:
                 file_normalized_path = normalized_path
+                file_needs_limiting_path = needs_limiting_path
 
             result = process_single_file(
                 audio_path=str(audio_path),
@@ -308,12 +317,13 @@ class LUFSNormalizer:
                 bit_depth=bit_depth,
                 sample_rate=sample_rate,
                 normalized_path=str(file_normalized_path),
-                needs_limiting_path=str(needs_limiting_path),
+                needs_limiting_path=str(file_needs_limiting_path),
                 embed_bwf=embed_bwf,
                 rng_seed=idx,
                 dry_run=dry_run,
             )
-            self._process_result(result, idx, total_files)
+            report_name = audio_path.relative_to(input_path).as_posix() if recursive else None
+            self._process_result(result, idx, total_files, report_name)
 
         csv_path = self._write_reports(logs_path, generate_csv)
         self._log_summary(total_files, normalized_path, needs_limiting_path)
@@ -385,8 +395,10 @@ class LUFSNormalizer:
                 if recursive:
                     rel_parent = audio_path.relative_to(input_path).parent
                     file_normalized_path = normalized_path / rel_parent
+                    file_needs_limiting_path = needs_limiting_path / rel_parent
                 else:
                     file_normalized_path = normalized_path
+                    file_needs_limiting_path = needs_limiting_path
 
                 future = executor.submit(
                     process_single_file,
@@ -397,7 +409,7 @@ class LUFSNormalizer:
                     bit_depth=bit_depth,
                     sample_rate=sample_rate,
                     normalized_path=str(file_normalized_path),
-                    needs_limiting_path=str(needs_limiting_path),
+                    needs_limiting_path=str(file_needs_limiting_path),
                     embed_bwf=embed_bwf,
                     rng_seed=idx,
                     dry_run=dry_run,
@@ -421,7 +433,9 @@ class LUFSNormalizer:
 
                 try:
                     result = future.result()
-                    self._process_result(result, completed, total_files)
+                    report_name = (audio_path.relative_to(input_path).as_posix()
+                                   if recursive else None)
+                    self._process_result(result, completed, total_files, report_name)
                 except Exception as e:
                     logger.error(f"[{completed}/{total_files}] Worker error for {audio_path.name}: {e}")
                     self.errors.append({

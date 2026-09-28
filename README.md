@@ -2,7 +2,7 @@
 
 Professional batch audio normalization for broadcast, game audio and streaming. Normalizes WAV and AIFF files to industry-standard LUFS targets while respecting True Peak limits.
 
-**Version 3.1.2** | Author: Mario Vitale
+**Version 3.1.3** | Author: Mario Vitale
 
 ## Download
 
@@ -114,7 +114,7 @@ Output filenames replace any existing `_-XXLUFS` or `_normalized` suffix with th
 
 | Column | Description |
 |---|---|
-| `filename` | Input filename |
+| `filename` | Input filename (path relative to the input folder with forward slashes in `--recursive` mode, e.g. `a/tone.wav`) |
 | `status` | `OK` or `OK_UNDERSHOOT` |
 | `reason` | `ok` or `peak_limited` |
 | `sample_rate` | Output sample rate in Hz |
@@ -132,7 +132,7 @@ Generated in Strict mode when files are skipped.
 
 | Column | Description |
 |---|---|
-| `filename` | Input filename |
+| `filename` | Input filename (path relative to the input folder with forward slashes in `--recursive` mode, e.g. `a/tone.wav`) |
 | `original_lufs` | Measured input loudness |
 | `predicted_peak_dBTP` | Peak that would result from normalization |
 | `gain_needed_db` | Gain that would be required |
@@ -149,7 +149,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 
 | Field | Value |
 |---|---|
-| Description | `Normalized to -23.0 LUFS by LUFS Normalizer v3.1.2` |
+| Description | `Normalized to -23.0 LUFS by LUFS Normalizer v3.1.3` |
 | Originator | `LUFS Normalizer` |
 | OriginatorReference | `LN302` |
 | OriginationDate | Processing date (yyyy-mm-dd) |
@@ -164,7 +164,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 <BWFXML>
   <IXML_VERSION>1.52</IXML_VERSION>
   <PROJECT>LUFS Normalizer</PROJECT>
-  <NOTE>Normalized to -23.0 LUFS by LUFS Normalizer v3.1.2</NOTE>
+  <NOTE>Normalized to -23.0 LUFS by LUFS Normalizer v3.1.3</NOTE>
   <USER>
     <TARGET_LUFS>-23.0</TARGET_LUFS>
     <FINAL_LUFS>-23.01</FINAL_LUFS>
@@ -199,6 +199,7 @@ python -m lufs_normalizer input_dir output_dir [options]
 | `--bwf` | Embed BWF BEXT + iXML in output WAV files | off |
 | `--parallel` | Enable parallel processing | off |
 | `--workers N` | Number of parallel workers | CPU count |
+| `--recursive` | Scan subdirectories; mirror folder hierarchy in output | off |
 | `--watch` | Watch folder mode (monitor for new files) | off |
 
 ### Examples
@@ -265,13 +266,13 @@ New `.wav` and `.aiff` files dropped into the watch folder are automatically det
 build.bat
 ```
 
-This installs build dependencies, generates the application icon via `create_icon.py` and runs PyInstaller to produce a single-file exe. The distribution is written to `dist/LUFSNormalizer_v3.1.2/` with the exe, `config.json` and icon files.
+This installs build dependencies, generates the application icon via `create_icon.py` and runs PyInstaller to produce a single-file exe. The distribution is written to `dist/LUFSNormalizer_v3.1.3/` with the exe, `config.json` and icon files.
 
 ### Manual build
 
 ```bash
 pip install pyinstaller
-pyinstaller LUFSNormalizer_v3.1.2.spec
+pyinstaller LUFSNormalizer_v3.1.3.spec
 ```
 
 The spec file bundles `config.json`, the `lufs_normalizer` package and hidden imports for PySide6, soundfile, pyloudnorm, soxr, numpy and watchdog.
@@ -345,6 +346,12 @@ values, TPDF dither distribution, BWF/iXML round-trips, every branch of
 `process_single_file`, parallel-vs-sequential consistency, the watch
 folder pipeline (including pre-existing file scan-on-start) and the
 large-file streaming path (chunked K-weighting and write).
+
+## Known Issues
+
+- With `--recursive` and the output folder equal to or inside the input folder, files previously written to `needs_limiting/` are picked up as new inputs on the next run. Use a separate output folder.
+- The CLI exits with code 0 even when files are diverted to `needs_limiting/` or fail.
+- Failed files (for example files containing NaN or inf samples) are reported only in the console output and `processing.log`. They do not appear in the CSV reports.
 
 ## Credits
 

@@ -15,7 +15,8 @@ from pathlib import Path
 from .measurement import measure_true_peak, measure_lra
 from .dither import apply_tpdf_dither
 from .metadata import inject_bext_chunk, inject_ixml_chunk, build_ixml_for_normalization
-from .streaming import should_use_streaming, measure_streaming, write_normalized_streaming
+from .streaming import (should_use_streaming, measure_streaming, write_normalized_streaming,
+                        NonFiniteSamplesError)
 from .. import get_output_filename, VERSION
 
 
@@ -60,6 +61,22 @@ def process_single_file(audio_path, target_lufs, peak_ceiling, strict_lufs_match
     def log(level, msg):
         log_messages.append((level, msg))
 
+    def non_finite_failure(count):
+        msg = f"{count} non-finite samples (NaN/inf)"
+        log('error', f"FAILED: {audio_path.name} | {msg}")
+        return {
+            'type': 'error',
+            'filename': audio_path.name,
+            'error': {
+                'filename': audio_path.name,
+                'error': msg,
+                'status': 'FAILED',
+                'reason': 'non_finite_samples'
+            },
+            'output_file': None,
+            'log_messages': log_messages,
+        }
+
     try:
         # Read file metadata upfront (no audio data loaded yet)
         _info = sf.info(str(audio_path))
@@ -96,6 +113,8 @@ def process_single_file(audio_path, target_lufs, peak_ceiling, strict_lufs_match
             log('info', f"  Large file detected — using streaming mode (chunked I/O)")
             try:
                 original_lufs, _input_true_peak_db = measure_streaming(audio_path)
+            except NonFiniteSamplesError as _e:
+                return non_finite_failure(_e.count)
             except RuntimeError as _e:
                 log('error', f"BLOCKED: {audio_path.name} | {_e}")
                 return {
@@ -115,6 +134,10 @@ def process_single_file(audio_path, target_lufs, peak_ceiling, strict_lufs_match
         else:
             # Standard path: load full file into RAM
             data, rate = sf.read(str(audio_path))
+
+            non_finite = int(np.count_nonzero(~np.isfinite(data)))
+            if non_finite:
+                return non_finite_failure(non_finite)
 
             # Measure original LUFS
             meter = pyln.Meter(rate)
