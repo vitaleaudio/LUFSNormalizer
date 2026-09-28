@@ -1,8 +1,12 @@
 # LUFS Normalizer
 
-Professional batch audio normalization for broadcast, game audio, and streaming. Normalizes WAV and AIFF files to industry-standard LUFS targets while respecting True Peak limits.
+Professional batch audio normalization for broadcast, game audio and streaming. Normalizes WAV and AIFF files to industry-standard LUFS targets while respecting True Peak limits.
 
-**Version 3.1.0** | Author: Mario Vitale
+**Version 3.1.2** | Author: Mario Vitale
+
+## Download
+
+Get the latest Windows build from the [releases page](https://github.com/vitaleaudio/LUFSNormalizer/releases/latest). The exe is unsigned, so Windows SmartScreen will warn on first launch.
 
 ## Features
 
@@ -14,7 +18,7 @@ Professional batch audio normalization for broadcast, game audio, and streaming.
 - **Parallel batch processing** using ProcessPoolExecutor
 - **BWF BEXT + iXML metadata** injection for WAV files
 - **Watch folder mode** with automatic processing of new files
-- **10 built-in presets** covering broadcast, streaming, game, film, and music
+- **10 built-in presets** covering broadcast, streaming, game, film and music
 - **Strict LUFS and Drift** peak handling modes
 - **PySide6 dark-themed GUI** with preset manager and real-time log
 - **CLI** for scripting and headless operation
@@ -37,7 +41,7 @@ Professional batch audio normalization for broadcast, game audio, and streaming.
 | `music_loud` | Music (Loud) | -9.0 | -1.0 | Contemporary pop/EDM |
 | `reference_cinema` | Cinema Dialog Ref | -27.0 | -2.0 | Netflix 5.1 |
 
-The GUI displays up to 5 favorite presets as quick-select buttons. Use the Preset Manager to add, remove, and drag-reorder favorites.
+The GUI displays up to 5 favorite presets as quick-select buttons. Use the Preset Manager to add, remove and drag-reorder favorites.
 
 ---
 
@@ -57,15 +61,15 @@ Gain is reduced to keep the True Peak at or below the ceiling. The final LUFS ma
 
 - **Input:** `.wav`, `.WAV`, `.aiff`, `.AIFF`, `.aif`, `.AIF`
 - **Output:** Same format as input (WAV stays WAV, AIFF stays AIFF)
-- **Bit depth:** Preserve, 16-bit, 24-bit, or 32-bit (TPDF dither applied when reducing)
-- **Sample rate:** Preserve, 44100 Hz, or 48000 Hz (downsampling only, requires SOXR)
+- **Bit depth:** Preserve, 16-bit, 24-bit or 32-bit (TPDF dither applied when reducing)
+- **Sample rate:** Preserve, 44100 Hz or 48000 Hz (downsampling only, requires SOXR)
 
 ### Large-file streaming mode
 
 Files whose float64 in-memory footprint would exceed **2 GiB** (~46 minutes stereo 48 kHz) are automatically processed in constant-memory chunks. Memory usage stays bounded regardless of file duration.
 
 - Requires `scipy` (`pip install scipy`)
-- **Limitation:** sample rate conversion is not supported in streaming mode — normalize rate separately or omit the `--rate` flag
+- **Limitation:** sample rate conversion is not supported in streaming mode - normalize rate separately or omit the `--rate` flag
 - LRA is reported as empty for files processed in streaming mode
 
 ---
@@ -114,7 +118,7 @@ Output filenames replace any existing `_-XXLUFS` or `_normalized` suffix with th
 | `status` | `OK` or `OK_UNDERSHOOT` |
 | `reason` | `ok` or `peak_limited` |
 | `sample_rate` | Output sample rate in Hz |
-| `bit_depth` | Output bit depth (16, 24, or 32) |
+| `bit_depth` | Output bit depth (16, 24 or 32) |
 | `original_lufs` | Measured input loudness |
 | `target_lufs` | Requested target |
 | `final_lufs` | Measured output loudness |
@@ -145,7 +149,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 
 | Field | Value |
 |---|---|
-| Description | `Normalized to -23.0 LUFS by LUFS Normalizer v3.1.0` |
+| Description | `Normalized to -23.0 LUFS by LUFS Normalizer v3.1.2` |
 | Originator | `LUFS Normalizer` |
 | OriginatorReference | `LN302` |
 | OriginationDate | Processing date (yyyy-mm-dd) |
@@ -160,7 +164,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 <BWFXML>
   <IXML_VERSION>1.52</IXML_VERSION>
   <PROJECT>LUFS Normalizer</PROJECT>
-  <NOTE>Normalized to -23.0 LUFS by LUFS Normalizer v3.1.0</NOTE>
+  <NOTE>Normalized to -23.0 LUFS by LUFS Normalizer v3.1.2</NOTE>
   <USER>
     <TARGET_LUFS>-23.0</TARGET_LUFS>
     <FINAL_LUFS>-23.01</FINAL_LUFS>
@@ -170,7 +174,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 </BWFXML>
 ```
 
-Compatible with Wwise, FMOD, and broadcast QC tools.
+Compatible with Wwise, FMOD and broadcast QC tools.
 
 ---
 
@@ -236,7 +240,7 @@ python normalize_gui_modern.py
 
 1. Select input and output folders
 2. Choose a preset or set LUFS / peak values manually
-3. Configure bit depth, sample rate, and options (BWF, parallel, strict/drift)
+3. Configure bit depth, sample rate and options (BWF, parallel, strict/drift)
 4. Click **Start Processing**
 
 The LUFS spinner supports Up/Down arrow keys (1.0 step) and Shift+Up/Down (0.1 step).
@@ -261,16 +265,16 @@ New `.wav` and `.aiff` files dropped into the watch folder are automatically det
 build.bat
 ```
 
-This installs build dependencies, generates the application icon via `create_icon.py`, and runs PyInstaller to produce a single-file exe. The distribution is written to `dist/LUFSNormalizer_v3.1.0/` with the exe, `config.json`, and icon files.
+This installs build dependencies, generates the application icon via `create_icon.py` and runs PyInstaller to produce a single-file exe. The distribution is written to `dist/LUFSNormalizer_v3.1.2/` with the exe, `config.json` and icon files.
 
 ### Manual build
 
 ```bash
 pip install pyinstaller
-pyinstaller LUFSNormalizer_v3.1.0.spec
+pyinstaller LUFSNormalizer_v3.1.2.spec
 ```
 
-The spec file bundles `config.json`, the `lufs_normalizer` package, and hidden imports for PySide6, soundfile, pyloudnorm, soxr, numpy, and watchdog.
+The spec file bundles `config.json`, the `lufs_normalizer` package and hidden imports for PySide6, soundfile, pyloudnorm, soxr, numpy and watchdog.
 
 Place `config.json` next to the exe for default settings. The exe creates and updates this file to persist user preferences.
 
@@ -335,16 +339,16 @@ pytest
 
 `requirements-test.txt` contains only the packages needed to run the suite (no PySide6 or Pillow). CI runs the same command on Ubuntu and Windows across Python 3.9 / 3.11 / 3.13 via GitHub Actions (`.github/workflows/test.yml`).
 
-The suite (~113 tests) generates audio fixtures on the fly — no binary
+The suite (130+ tests) generates audio fixtures on the fly - no binary
 test files in the repo. It covers BS.1770 measurement against reference
 values, TPDF dither distribution, BWF/iXML round-trips, every branch of
 `process_single_file`, parallel-vs-sequential consistency, the watch
-folder pipeline (including pre-existing file scan-on-start), and the
+folder pipeline (including pre-existing file scan-on-start) and the
 large-file streaming path (chunked K-weighting and write).
 
 ## Credits
 
-Developed by Mario Vitale
+Product design, specification and QA by Mario Vitale. Implementation built with Claude (Anthropic) under his direction.
 
 **Libraries:** [pyloudnorm](https://github.com/csteinmetz1/pyloudnorm), [soundfile](https://github.com/bastibe/python-soundfile), [soxr](https://github.com/dofuuz/python-soxr), [PySide6](https://doc.qt.io/qtforpython-6/)
 

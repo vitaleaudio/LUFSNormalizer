@@ -2,7 +2,7 @@
 dist/
 build/
 *.spec
-!LUFSNormalizer_v3.1.0.spec
+!LUFSNormalizer_v3.1.2.spec
 
 # Python
 __pycache__/
@@ -43,3 +43,6 @@ Desktop.ini
 
 # PyInstaller
 *.manifest
+
+# Claude Code project settings
+.claude/

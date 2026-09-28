@@ -1,6 +1,6 @@
 @echo off
 echo ====================================================
-echo LUFS Normalizer v3.1.0 - Build Script
+echo LUFS Normalizer v3.1.2 - Build Script
 echo ====================================================
 echo.
 
@@ -14,7 +14,7 @@ python scripts\create_icon.py
 echo.
 echo Building executable...
 pyinstaller --onefile --windowed ^
-    --name "LUFSNormalizer_v3.1.0" ^
+    --name "LUFSNormalizer_v3.1.2" ^
     --icon "icons\app_icon.ico" ^
     --add-data "config.default.json;." ^
     --add-data "lufs_normalizer;lufs_normalizer" ^
@@ -36,18 +36,18 @@ pyinstaller --onefile --windowed ^
 
 echo.
 echo Creating distribution package...
-if not exist "dist\LUFSNormalizer_v3.1.0" mkdir "dist\LUFSNormalizer_v3.1.0"
+if not exist "dist\LUFSNormalizer_v3.1.2" mkdir "dist\LUFSNormalizer_v3.1.2"
 
-move "dist\LUFSNormalizer_v3.1.0.exe" "dist\LUFSNormalizer_v3.1.0\"
-copy "config.default.json" "dist\LUFSNormalizer_v3.1.0\config.json"
-copy "scripts\verify_audio.py" "dist\LUFSNormalizer_v3.1.0\"
-if exist "icons\app_icon.ico" copy "icons\app_icon.ico" "dist\LUFSNormalizer_v3.1.0\"
-if exist "icons\taskbar_icon.ico" copy "icons\taskbar_icon.ico" "dist\LUFSNormalizer_v3.1.0\"
+move "dist\LUFSNormalizer_v3.1.2.exe" "dist\LUFSNormalizer_v3.1.2\"
+copy "config.default.json" "dist\LUFSNormalizer_v3.1.2\config.json"
+copy "scripts\verify_audio.py" "dist\LUFSNormalizer_v3.1.2\"
+if exist "icons\app_icon.ico" copy "icons\app_icon.ico" "dist\LUFSNormalizer_v3.1.2\"
+if exist "icons\taskbar_icon.ico" copy "icons\taskbar_icon.ico" "dist\LUFSNormalizer_v3.1.2\"
 
 echo.
 echo ====================================================
 echo BUILD COMPLETE!
 echo ====================================================
-echo Distribution: dist\LUFSNormalizer_v3.1.0\
+echo Distribution: dist\LUFSNormalizer_v3.1.2\
 echo ====================================================
 pause
