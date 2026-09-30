@@ -174,7 +174,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 </BWFXML>
 ```
 
-Compatible with Wwise, FMOD and broadcast QC tools.
+BWF BEXT follows EBU Tech 3285 v2 and the iXML chunk follows the iXML spec.
 
 ---
 
@@ -269,7 +269,7 @@ New `.wav` and `.aiff` files dropped into the watch folder are automatically det
 build.bat
 ```
 
-This installs build dependencies, generates the application icon via `create_icon.py` and runs PyInstaller to produce a single-file exe. The distribution is written to `dist/LUFSNormalizer_v3.1.4/` with the exe, `config.json` and icon files.
+This installs build dependencies, generates the application icon via `create_icon.py` and runs PyInstaller to produce single-file exes. The distribution is written to `dist/LUFSNormalizer_v3.1.4/` with both exes (GUI and CLI), `config.json`, `verify_audio.py` and icon files.
 
 ### Manual build
 
@@ -289,7 +289,7 @@ Place `config.json` next to the exe for default settings. The exe creates and up
 ### Requirements
 
 - Python 3.9+
-- Windows (primary target), macOS and Linux supported
+- Windows (primary target). CI also runs on Ubuntu. macOS is untested.
 
 ### Install
 
@@ -343,7 +343,7 @@ pytest
 
 `requirements-test.txt` contains only the packages needed to run the suite (no PySide6 or Pillow). CI runs the same command on Ubuntu and Windows across Python 3.9 / 3.11 / 3.13 via GitHub Actions (`.github/workflows/test.yml`).
 
-The suite (130+ tests) generates audio fixtures on the fly - no binary
+The suite (150+ tests) generates audio fixtures on the fly - no binary
 test files in the repo. It covers BS.1770 measurement against reference
 values, TPDF dither distribution, BWF/iXML round-trips, every branch of
 `process_single_file`, parallel-vs-sequential consistency, the watch
