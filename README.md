@@ -2,11 +2,11 @@
 
 Professional batch audio normalization for broadcast, game audio and streaming. Normalizes WAV and AIFF files to industry-standard LUFS targets while respecting True Peak limits.
 
-**Version 3.1.3** | Author: Mario Vitale
+**Version 3.1.4** | Author: Mario Vitale
 
 ## Download
 
-Get the latest Windows build from the [releases page](https://github.com/vitaleaudio/LUFSNormalizer/releases/latest). The download contains two executables: `LUFSNormalizer_v3.1.3.exe` (GUI) and `LUFSNormalizer_v3.1.3_CLI.exe` (command line). Both exes are unsigned, so Windows SmartScreen will warn on first launch.
+Get the latest Windows build from the [releases page](https://github.com/vitaleaudio/LUFSNormalizer/releases/latest). The download contains two executables: `LUFSNormalizer_v3.1.4.exe` (GUI) and `LUFSNormalizer_v3.1.4_CLI.exe` (command line). Both exes are unsigned, so Windows SmartScreen will warn on first launch.
 
 ## Features
 
@@ -149,7 +149,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 
 | Field | Value |
 |---|---|
-| Description | `Normalized to -23.0 LUFS by LUFS Normalizer v3.1.3` |
+| Description | `Normalized to -23.0 LUFS by LUFS Normalizer v3.1.4` |
 | Originator | `LUFS Normalizer` |
 | OriginatorReference | `LN302` |
 | OriginationDate | Processing date (yyyy-mm-dd) |
@@ -164,7 +164,7 @@ When enabled (`--bwf` on CLI, or the "Embed BWF metadata" checkbox in the GUI), 
 <BWFXML>
   <IXML_VERSION>1.52</IXML_VERSION>
   <PROJECT>LUFS Normalizer</PROJECT>
-  <NOTE>Normalized to -23.0 LUFS by LUFS Normalizer v3.1.3</NOTE>
+  <NOTE>Normalized to -23.0 LUFS by LUFS Normalizer v3.1.4</NOTE>
   <USER>
     <TARGET_LUFS>-23.0</TARGET_LUFS>
     <FINAL_LUFS>-23.01</FINAL_LUFS>
@@ -180,10 +180,10 @@ Compatible with Wwise, FMOD and broadcast QC tools.
 
 ## CLI Usage
 
-The CLI ships as a separate executable, `LUFSNormalizer_v3.1.3_CLI.exe`, in the same download as the GUI exe. Run the CLI commands in this README against that file, not the GUI exe. `LUFSNormalizer_v3.1.3.exe` always opens the GUI and ignores command-line arguments. When using the downloaded exe, replace `python -m lufs_normalizer` in the examples below with `LUFSNormalizer_v3.1.3_CLI.exe`.
+The CLI ships as a separate executable, `LUFSNormalizer_v3.1.4_CLI.exe`, in the same download as the GUI exe. Run the CLI commands in this README against that file, not the GUI exe. `LUFSNormalizer_v3.1.4.exe` always opens the GUI and ignores command-line arguments. When using the downloaded exe, replace `python -m lufs_normalizer` in the examples below with `LUFSNormalizer_v3.1.4_CLI.exe`.
 
 ```
-LUFSNormalizer_v3.1.3_CLI.exe input_dir output_dir [options]
+LUFSNormalizer_v3.1.4_CLI.exe input_dir output_dir [options]
 python -m lufs_normalizer input_dir output_dir [options]
 ```
 
@@ -269,13 +269,13 @@ New `.wav` and `.aiff` files dropped into the watch folder are automatically det
 build.bat
 ```
 
-This installs build dependencies, generates the application icon via `create_icon.py` and runs PyInstaller to produce a single-file exe. The distribution is written to `dist/LUFSNormalizer_v3.1.3/` with the exe, `config.json` and icon files.
+This installs build dependencies, generates the application icon via `create_icon.py` and runs PyInstaller to produce a single-file exe. The distribution is written to `dist/LUFSNormalizer_v3.1.4/` with the exe, `config.json` and icon files.
 
 ### Manual build
 
 ```bash
 pip install pyinstaller
-pyinstaller LUFSNormalizer_v3.1.3.spec
+pyinstaller LUFSNormalizer_v3.1.4.spec
 ```
 
 The spec file bundles `config.json`, the `lufs_normalizer` package and hidden imports for PySide6, soundfile, pyloudnorm, soxr, numpy and watchdog.

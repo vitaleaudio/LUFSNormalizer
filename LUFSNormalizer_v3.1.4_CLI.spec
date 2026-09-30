@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='LUFSNormalizer_v3.1.3_CLI',
+    name='LUFSNormalizer_v3.1.4_CLI',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

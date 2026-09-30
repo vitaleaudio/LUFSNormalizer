@@ -388,7 +388,9 @@ def process_single_file(audio_path, target_lufs, peak_ceiling, strict_lufs_match
             if output_bits < 32:
                 normalized_data = apply_tpdf_dither(normalized_data, output_bits, rng=rng)
 
-            sf.write(str(output_file), normalized_data, output_rate, subtype=output_subtype)
+            output_format = 'AIFF' if output_file.suffix.lower() in ('.aif', '.aiff') else 'WAV'
+            sf.write(str(output_file), normalized_data, output_rate, subtype=output_subtype,
+                     format=output_format)
 
             # Measure final values from the written file, not the in-memory float buffer.
             # This reflects actual post-quantization loudness / peak that consumers will hear.

@@ -1,5 +1,5 @@
 """
-LUFS Normalizer v3.1.3
+LUFS Normalizer v3.1.4
 Professional broadcast-grade audio normalization
 
 Author: Mario Vitale
@@ -8,7 +8,7 @@ Author: Mario Vitale
 import re
 from pathlib import Path
 
-VERSION = "3.1.3"
+VERSION = "3.1.4"
 
 
 def get_output_filename(original_name, target_lufs):

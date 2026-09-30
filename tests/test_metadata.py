@@ -159,7 +159,7 @@ class TestiXMLInjection:
     def test_ixml_round_trip(self, tmp_path):
         wav = tmp_path / 'a.wav'
         self._make_wav(wav)
-        xml = build_ixml_for_normalization(-23.0, -23.01, 8.2, -1.82, '3.1.3')
+        xml = build_ixml_for_normalization(-23.0, -23.01, 8.2, -1.82, '3.1.4')
         assert inject_ixml_chunk(str(wav), xml)
         ixml = _read_ixml(str(wav))
         assert ixml is not None
@@ -179,7 +179,7 @@ class TestiXMLInjection:
 
 class TestBuildIXML:
     def test_finite_values(self):
-        xml = build_ixml_for_normalization(-23.0, -23.01, 8.2, -1.82, '3.1.3')
+        xml = build_ixml_for_normalization(-23.0, -23.01, 8.2, -1.82, '3.1.4')
         assert '<FINAL_LUFS>-23.01</FINAL_LUFS>' in xml
         assert '<LRA_LU>8.2</LRA_LU>' in xml
         assert '<TRUE_PEAK_DBTP>-1.82</TRUE_PEAK_DBTP>' in xml
@@ -187,7 +187,7 @@ class TestBuildIXML:
     def test_neg_inf_renders_as_na(self):
         """Round 1 fix #2: non-finite values render 'N/A', not '-inf'."""
         xml = build_ixml_for_normalization(-23.0, float('-inf'),
-                                            float('nan'), -1.0, '3.1.3')
+                                            float('nan'), -1.0, '3.1.4')
         assert '<FINAL_LUFS>N/A</FINAL_LUFS>' in xml
         assert '<LRA_LU>N/A</LRA_LU>' in xml
         assert '-inf' not in xml
@@ -195,5 +195,5 @@ class TestBuildIXML:
 
     def test_none_lra_renders_as_na(self):
         """LRA can legitimately be None (file too short)."""
-        xml = build_ixml_for_normalization(-23.0, -23.0, None, -1.0, '3.1.3')
+        xml = build_ixml_for_normalization(-23.0, -23.0, None, -1.0, '3.1.4')
         assert '<LRA_LU>N/A</LRA_LU>' in xml

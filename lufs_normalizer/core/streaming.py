@@ -147,10 +147,12 @@ def write_normalized_streaming(in_path, out_path, gain_linear: float, rate: int,
 
     info = sf.info(str(in_path))
     num_channels = info.channels
+    output_format = 'AIFF' if out_path.suffix.lower() in ('.aif', '.aiff') else 'WAV'
 
     with sf.SoundFile(str(in_path)) as fin, \
          sf.SoundFile(str(out_path), mode='w', samplerate=rate,
-                      channels=num_channels, subtype=output_subtype) as fout:
+                      channels=num_channels, subtype=output_subtype,
+                      format=output_format) as fout:
         for raw in fin.blocks(blocksize=chunk_frames, dtype='float64'):
             chunk = raw * gain_linear
             chunk = np.clip(chunk, -1.0, 1.0)
